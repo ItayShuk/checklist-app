@@ -1,16 +1,26 @@
 package main
 
 import (
-	"fmt"
+	"awesomeProject/Controller"
+	"awesomeProject/Facade"
 	"net/http"
 )
 
-func helloWorldPage(w http.ResponseWriter, r *http.Request) {
-	fmt.Fprint(w, "Hello, world!")
-}
-
 func main() {
-	println("Hello, world!")
-	http.HandleFunc("/", helloWorldPage)
-	http.ListenAndServe(":8080", nil)
+	// Initialize the Facade and pass it to the Controller
+	facade := Facade.NewChecklistFacade()
+
+	// Initialize the Controller with the Facade
+	checklistController := Controller.NewChecklistController(facade)
+
+	// Register the handler
+	http.HandleFunc("/home", checklistController.HomeHandler)
+
+	http.HandleFunc("/", checklistController.HomeScreenHandler)
+
+	// Start the HTTP server
+	err := http.ListenAndServe(":8080", nil)
+	if err != nil {
+		return
+	}
 }
