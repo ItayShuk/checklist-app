@@ -1,0 +1,15 @@
+version: '3.8'
+services:
+  mongo:
+    image: mongo:latest
+    container_name: mongo
+    ports:
+      - 27017:27017
+    volumes:
+      - type: bind
+        source: ./data/DB
+        target: /data/db
+      - ./data/script:/docker-entrypoint-initdb.d
+    restart: always
+volumes:
+  mongodata:
