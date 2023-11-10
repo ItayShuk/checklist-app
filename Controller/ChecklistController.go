@@ -1,22 +1,13 @@
 package Controller
 
 import (
-	"awesomeProject/Facade"
+	"awesomeProject/Service"
 	"net/http"
 )
 
 type ChecklistController struct {
-	facade            Facade.ChecklistFacade
-	HomeHandler       http.HandlerFunc
+	service           *Service.ChecklistService
 	HomeScreenHandler http.HandlerFunc
-}
-
-func NewChecklistController(f Facade.ChecklistFacade) *ChecklistController {
-	return &ChecklistController{
-		facade:            f,
-		HomeHandler:       homeHandler(), // Assign the homeHandler function
-		HomeScreenHandler: homeScreenHandler(),
-	}
 }
 
 func homeScreenHandler() http.HandlerFunc {
@@ -29,12 +20,10 @@ func homeScreenHandler() http.HandlerFunc {
 	}
 }
 
-func homeHandler() http.HandlerFunc {
-	return func(w http.ResponseWriter, r *http.Request) {
-		// ... use facade to get data and write to response ...
-		_, err := w.Write([]byte("Home Page"))
-		if err != nil {
-			return
-		}
-	}
+func NewChecklistController(service *Service.ChecklistService) *ChecklistController {
+	return &ChecklistController{service: service}
+}
+
+func (c *ChecklistController) HomeHandler(w http.ResponseWriter, r *http.Request) []Service.ProcessedItem {
+	return c.service.ListItems()
 }

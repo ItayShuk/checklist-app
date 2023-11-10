@@ -1,4 +1,4 @@
-package utils
+package Utils
 
 // item.go (or you can define it in an appropriate file)
 type Item struct {
